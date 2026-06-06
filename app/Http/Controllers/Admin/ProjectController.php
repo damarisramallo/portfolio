@@ -91,7 +91,7 @@ class ProjectController extends Controller
         $data = $request->validate([
             'title'       => 'required|string|max:255',
             'description' => 'nullable|string',
-            'image'       => 'nullable|image|max:2048',
+            'image'       => 'nullable|image',
             'slug'        => 'nullable|string|unique:projects,slug,' . $project->id . '|max:255',
             'excerpt'     => 'nullable|string|max:255',
             'url'         => 'nullable|url|max:255',
@@ -104,9 +104,9 @@ class ProjectController extends Controller
 
         if ($request->hasFile('image')) {
             if ($project->image) {
-                Storage::disk('public')->delete($project->image);
+                Storage::delete($project->image);
             }
-            $data['image'] = Storage::disk('public')->put('projects', $request->file('image'));
+            $data['image'] = Storage::put('projects', $request->file('image'));
         }
 
         $project->update($data);

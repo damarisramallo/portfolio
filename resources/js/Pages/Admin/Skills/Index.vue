@@ -18,8 +18,8 @@
         <table class="table" v-if="skills.length > 0">
           <thead>
             <tr>
+              <th>Ícono</th>
               <th>Nombre</th>
-              <th>Icono</th>
               <th>Orden</th>
               <th></th>
             </tr>
@@ -27,46 +27,36 @@
           <tbody>
             <tr v-for="skill in skills" :key="skill.id">
 
-              <!-- Imagen + título -->
+              <!-- Ícono -->
               <td>
-                <div class="project-cell">
-                  <div>
-                    <p class="skill-title">{{ skill.name }}</p>
-                  </div>
+                <div class="icon-cell">
+                  <img
+                    v-if="skill.icon"
+                    :src="`/storage/${skill.icon}`"
+                    :alt="skill.name"
+                    class="skill-icon-img"
+                  />
+                  <span v-else class="skill-icon-placeholder">
+                    {{ skill.name[0] }}
+                  </span>
                 </div>
               </td>
 
-            <!-- Icono -->
-            <td>
-              <div class="icon-cell">
-                <img
-                  v-if="skill.icon"
-                  :src="`/storage/${skill.icon}`"
-                  :alt="skill.name"
-                  class="skill-icon-img"
-                />
-                <span v-else class="skill-icon-placeholder">
-                  {{ skill.name[0] }}
-                </span>
-              </div>
-            </td>
+              <!-- Nombre -->
+              <td>
+                <p class="skill-title">{{ skill.name }}</p>
+              </td>
 
               <!-- Orden -->
               <td class="order-cell">{{ skill.order }}</td>
 
               <!-- Acciones -->
-              <td>
+              <td style="text-align: right; vertical-align: middle;">
                 <div class="actions">
-                  <Link
-                    :href="`/admin/skills/${skill.id}/edit`"
-                    class="btn-edit"
-                  >
+                  <Link :href="`/admin/skills/${skill.id}/edit`" class="btn-edit">
                     Editar
                   </Link>
-                  <button
-                    class="btn-delete"
-                    @click="confirmDelete(skill)"
-                  >
+                  <button class="btn-delete" @click="confirmDelete(skill)">
                     Eliminar
                   </button>
                 </div>
@@ -207,6 +197,14 @@ async function confirmDelete(skill) {
   text-transform: uppercase;
 }
 
+.table th:nth-child(3) {
+  text-align: left;
+}
+
+.table th:last-child {
+  text-align: right;
+}
+
 .table td {
   padding: 14px 16px;
   border-bottom: 1px solid #f5f4f2;
@@ -268,11 +266,17 @@ async function confirmDelete(skill) {
 .order-cell {
   font-size: 13px;
   color: #9c9a93;
-  text-align: center;
+  text-align: left;
+  vertical-align: middle;
 }
 
 /* Acciones */
-.actions { display: flex; gap: 6px; }
+.actions {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  justify-content: flex-end;
+}
 
 .btn-edit {
   font-size: 12px;

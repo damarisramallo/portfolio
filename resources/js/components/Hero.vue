@@ -6,7 +6,7 @@
         <div class="hero-photo-ring">
           <img
             v-if="photo"
-            :src="photo"
+            :src="`/storage/${photo}`"
             :alt="name"
             class="hero-photo"
           />
@@ -36,6 +36,16 @@
           class="btn-primary"
           @click.prevent="scrollTo('proyectos')"
           >Ver proyectos</a>
+
+          <a
+          v-if="cv"
+          :href="`/storage/${cv}`"
+          target="_blank"
+          class="btn-ghost"
+          download
+        >
+          Descargar CV
+        </a>
         </div>
 
       </div>
@@ -49,15 +59,10 @@ import { computed } from 'vue'
 
 const props = defineProps({
   name:  { type: String, default: 'Damaris' },
-  bio:   {
-    type: String,
-    default: 'Diseño y construyo aplicaciones web completas — desde el análisis y la arquitectura hasta la interfaz final. Me enfoco en código limpio, buena experiencia de usuario y soluciones que escalan.',
-  },
+  bio:   { type: String, default: '' },
   photo: { type: String, default: null },
-  stack: {
-    type: Array,
-    default: () => ['Laravel', 'Vue 3', 'Inertia.js', 'Tailwind', 'MySQL', 'PHP'],
-  },
+  cv:    { type: String, default: null },
+  stack: { type: Array,  default: () => [] },
 })
 
 const initials = computed(() =>

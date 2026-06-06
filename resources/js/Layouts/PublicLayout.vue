@@ -1,4 +1,15 @@
 <template>
+  <Head>
+    <title>Damaris Ramallo — Analista de Sistemas</title>
+    <meta name="description" content="Portfolio de Damaris Ramallo, Analista de Sistemas y Desarrolladora Fullstack especializada en Laravel, Vue 3 e Inertia.js." />
+    <meta name="keywords" content="desarrolladora fullstack, Laravel, Vue 3, Inertia.js, portfolio" />
+
+    <meta property="og:title" content="Damaris Ramallo — Analista de Sistemas" />
+    <meta property="og:description" content="Portfolio de Damaris Ramallo, Analista de Sistemas y Desarrolladora Fullstack." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://damarisramallo.com/" />
+
+  </Head>
   <div class="layout">
 
     <!-- NAVBAR -->
@@ -15,10 +26,10 @@
           <a
             v-for="item in navItems"
             :key="item.id"
-            :href="`#${item.id}`"
+            :href="`/#${item.id}`"
             class="nav-link"
             :class="{ 'nav-link--active': activeSection === item.id }"
-            @click.prevent="scrollTo(item.id)"
+            @click.prevent="navigateTo(item.id)"
           >
             {{ item.label }}
             <span class="nav-indicator" />
@@ -81,10 +92,10 @@
     <footer class="footer">
       <div class="footer-inner">
         <span class="footer-name">
-          Damaris<span class="logo-dot">.</span>
+          Damaris Ramallo<span class="logo-dot">.</span>
         </span>
         <span class="footer-copy">
-          {{ new Date().getFullYear() }} — Hecho con Laravel + Vue
+          {{ new Date().getFullYear() }} Argentina. Santa Fe. Todos los derechos reservados.
         </span>
       </div>
     </footer>
@@ -126,8 +137,29 @@ function scrollTo(id) {
   if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' })
 }
 
+function navigateTo(id) {
+  const isHome = window.location.pathname === '/'
+
+  if (isHome) {
+    scrollTo(id)
+  } else {
+    window.location.assign(`${window.location.origin}/#${id}`)
+  }
+}
+
 onMounted(()  => window.addEventListener('scroll', onScroll, { passive: true }))
 onUnmounted(() => window.removeEventListener('scroll', onScroll))
+
+onMounted(() => {
+  const hash = window.location.hash
+  if (hash) {
+    const id = hash.replace('#', '')
+    setTimeout(() => {
+      scrollTo(id)
+      history.replaceState(null, '', window.location.pathname)
+    }, 100)
+  }
+})
 </script>
 
 <style scoped>

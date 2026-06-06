@@ -14,15 +14,15 @@
       <!-- Grilla -->
       <div class="projects-grid">
         <TransitionGroup name="card" tag="div" class="grid-inner">
-          <component
+          <div
             v-for="project in projects"
             :key="project.slug"
             class="project-card"
             :style="{ cursor: project.in_development ? 'default' : 'pointer' }"
             @click="!project.in_development && goToProject(project.slug)"
           >
-          <!-- Imagen -->
-          <div class="card-image-wrap">
+            <!-- Imagen -->
+            <div class="card-image-wrap">
               <img
                 v-if="project.image"
                 :src="`/storage/${project.image}`"
@@ -32,25 +32,24 @@
               <div v-else class="card-placeholder">
                 <span class="placeholder-letter">{{ project.title[0] }}</span>
               </div>
-
-              <!-- Badge en desarrollo -->
+            
               <div v-if="project.in_development" class="dev-badge">
                 <span class="dev-dot"></span>
                 En desarrollo
               </div>
-          </div>
-
-          <!-- Contenido -->
-          <div class="card-body">
-            <div class="card-tags">
-              <span v-for="tag in project.tags" :key="tag" class="card-tag">
-                {{ tag }}
-              </span>
             </div>
-            <h3 class="card-title">{{ project.title }}</h3>
-            <p class="card-desc">{{ project.excerpt }}</p>
+          
+            <!-- Contenido -->
+            <div class="card-body">
+              <div class="card-tags">
+                <span v-for="tag in project.tags" :key="tag" class="card-tag">
+                  {{ tag }}
+                </span>
+              </div>
+              <h3 class="card-title">{{ project.title }}</h3>
+              <p class="card-desc">{{ project.excerpt }}</p>
+            </div>
           </div>
-          </component>
         </TransitionGroup>
     
       </div>

@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\RateLimiter;
 
 class ContactController extends Controller
 {
@@ -34,6 +35,16 @@ class ContactController extends Controller
      */
     public function store(Request $request)
     {
+
+        $key = 'contact|' . $request->ip();
+
+        if (RateLimiter::tooManyAttempts($key, 3)) {
+            $seconds = RateLimiter::availableIn($key);
+            return back()->withErrors([
+                'message' => "Demasiados mensajes enviados. Esperá {$seconds} segundos.",
+            ]);
+        }
+
         $validated = $request->validate([
             'name'    => 'required|string|max:100',
             'email'   => 'required|email|max:100',
@@ -47,6 +58,8 @@ class ContactController extends Controller
 
         Mail::to($validated['email'])->send(new \App\Mail\ContactConfirmationMail($validated));
  
+        RateLimiter::hit($key, 300);
+
         return back()->with('success', '¡Mensaje enviado correctamente!');
     }
 

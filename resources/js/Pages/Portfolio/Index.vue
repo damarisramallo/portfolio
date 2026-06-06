@@ -1,7 +1,13 @@
 <template>
   <PublicLayout>
     <section id="sobre-mi">
-      <Hero :about="about" />     
+      <Hero
+        :name="about.name"
+        :bio="about.bio"
+        :photo="about.photo"
+        :cv="about.cv"
+        :stack="about.stack"
+      />     
     </section>
 
     <section id="skills">
