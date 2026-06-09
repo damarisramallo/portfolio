@@ -108,6 +108,7 @@ class ProjectController extends Controller
             }
             $data['image'] = Storage::put('projects', $request->file('image'));
         }
+        if (!$request->hasFile('image')) unset($data['image']);
 
         $project->update($data);
 

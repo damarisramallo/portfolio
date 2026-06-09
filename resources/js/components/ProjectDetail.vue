@@ -20,9 +20,14 @@
 
     <div class="detail-content">
       <h2 class="detail-title">Descripción</h2>
-      <p v-if="project.description" class="detail-description">
-        {{ project.description }}
-      </p>
+      <div v-if="project.description" class="detail-description">
+        <template v-for="(block, i) in descriptionBlocks" :key="i">
+          <p v-if="block.type === 'text'">{{ block.content }}</p>
+          <ul v-else-if="block.type === 'list'">
+            <li v-for="(item, j) in block.items" :key="j">{{ item }}</li>
+          </ul>
+        </template>
+      </div>
 
       <div v-if="project.tags?.length" class="detail-tags">
         <span v-for="tag in project.tags" :key="tag" class="tag">
@@ -70,17 +75,62 @@ const props = defineProps({
 
 const embedUrl = computed(() => {
   if (!props.project.youtube_url) return null
-  const url = new URL(props.project.youtube_url)
-  const id = url.searchParams.get('v')
-  return `https://www.youtube.com/embed/${id}`
+
+  try {
+    const url = new URL(props.project.youtube_url)
+    let id = null
+
+    if (url.hostname === 'youtu.be') {
+      
+      id = url.pathname.slice(1)
+    } else {
+      id = url.searchParams.get('v')
+    }
+
+    if (!id) return null
+
+    const embed = new URL(`https://www.youtube.com/embed/${id}`)
+    embed.searchParams.set('origin', window.location.origin)
+
+    return embed.toString()
+  } catch {
+    return null
+  }
+})
+
+const descriptionBlocks = computed(() => {
+  if (!props.project.description) return []  
+
+  const blocks = []
+  let currentList = null
+
+  for (const line of props.project.description.split(/\r?\n/)) { 
+    const trimmed = line.trim()
+    if (!trimmed) continue
+
+    if (trimmed.startsWith('- ')) {
+      if (!currentList) {
+        currentList = { type: 'list', items: [] }
+        blocks.push(currentList)
+      }
+      currentList.items.push(trimmed.slice(2))
+    } else {
+      currentList = null
+      blocks.push({ type: 'text', content: trimmed })
+    }
+  }
+
+  return blocks
 })
 </script>
 
 <style scoped>
 .project-detail {
   max-width: 900px;
-  margin: 0 auto;
+  margin: 5rem auto;
   padding: 2rem;
+  background: #ffffff;
+  box-shadow: 0 0 40px rgba(0,0,0,0.15);
 }
 
 .back-link {
@@ -105,6 +155,16 @@ const embedUrl = computed(() => {
   color: var(--color-muted);
   margin-bottom: 1.5rem;
   line-height: 1.6;
+}
+
+.detail-description ul {
+  list-style: disc;
+  padding-left: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.detail-description li {
+  margin-bottom: 0.25rem;
 }
 
 .detail-tags {

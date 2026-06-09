@@ -105,7 +105,7 @@
 
 <script setup>
 import { ref, onMounted, onUnmounted, computed } from 'vue'
-import { Link, usePage } from '@inertiajs/vue3'
+import { Head, Link, usePage } from '@inertiajs/vue3'
 
 const navItems = [
   { id: 'sobre-mi',  label: 'Sobre mí'    },
