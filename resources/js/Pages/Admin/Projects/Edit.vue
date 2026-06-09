@@ -287,6 +287,8 @@ const form = useForm({
     in_development: props.project.in_development,
     order: props.project.order,
     visible: props.project.visible,
+    excerpt: props.project.excerpt,
+    slug: props.project.slug,
     _method: "PUT", // necesario para spoofing de método HTTP
 });
 
